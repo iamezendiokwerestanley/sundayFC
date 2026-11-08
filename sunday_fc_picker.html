@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunday FC - Team Randomizer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Football & UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        pitch: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-display {
+            font-family: 'Outfit', sans-serif;
+        }
+        .pitch-pattern {
+            background-color: #14532d;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(22, 163, 74, 0.5);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(22, 163, 74, 0.8);
+        }
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="pitch-pattern text-slate-100 min-h-full flex flex-col justify-between selection:bg-pitch-500 selection:text-white">
+
+    <!-- Header Section -->
+    <header class="w-full bg-pitch-950/80 backdrop-blur-md border-b border-pitch-800/60 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pitch-500 to-pitch-700 flex items-center justify-center shadow-md shadow-pitch-900/50 border border-pitch-400/30">
+                    <i class="fa-solid fa-futbol text-white text-2xl animate-spin" style="animation-duration: 20s;"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-black text-2xl sm:text-3xl tracking-tight text-white flex items-center gap-2">
+                        SUNDAY FC <span class="text-xs uppercase bg-pitch-700/80 text-pitch-100 px-2.5 py-1 rounded-full font-sans tracking-wider font-semibold border border-pitch-500/40">Mystery Reveal</span>
+                    </h1>
+                    <p class="text-xs text-pitch-300 font-medium">Eradicating paper slips • Max 5-a-side teams</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-pitch-900/80 px-4 py-2 rounded-xl border border-pitch-800 text-sm">
+                <i class="fa-regular fa-calendar-days text-pitch-400"></i>
+                <span id="current-date" class="font-semibold text-pitch-100">Sunday Matchday</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow flex flex-col gap-8">
+
+        <!-- STEP 1: Setup Screen -->
+        <section id="setup-section" class="bg-pitch-900/90 backdrop-blur-xl rounded-3xl p-6 sm:p-10 border border-pitch-700/60 shadow-2xl relative overflow-hidden max-w-2xl mx-auto w-full">
+            <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full border-8 border-pitch-800/40 pointer-events-none"></div>
+            
+            <div class="relative z-10 text-center">
+                <span class="text-pitch-400 font-semibold text-xs uppercase tracking-widest bg-pitch-800/80 px-3 py-1 rounded-full border border-pitch-700">Matchday Setup</span>
+                <h2 class="font-display text-2xl sm:text-4xl font-bold text-white mt-3">How many players are on the ground today?</h2>
+                <p class="text-pitch-300 text-sm mt-2">Enter the attendance below to prepare the mystery cards. Each player will step up and pick a card to reveal their team!</p>
+
+                <div class="mt-8 max-w-md mx-auto flex flex-col gap-6">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-pitch-400">
+                            <i class="fa-solid fa-users text-lg"></i>
+                        </div>
+                        <input 
+                            type="number" 
+                            id="player-count-input" 
+                            min="2" 
+                            max="60" 
+                            value="16" 
+                            placeholder="e.g. 16"
+                            class="w-full pl-12 pr-4 py-4 bg-pitch-950/80 border-2 border-pitch-700/80 rounded-2xl text-white font-display text-3xl font-bold text-center focus:outline-none focus:border-pitch-400 focus:ring-4 focus:ring-pitch-500/20 transition-all placeholder:text-pitch-700"
+                        >
+                    </div>
+
+                    <!-- Quick Select Pills -->
+                    <div class="flex flex-wrap items-center justify-center gap-2">
+                        <span class="text-xs text-pitch-400 font-medium mr-1">Quick Tally:</span>
+                        <button onclick="setAttendance(10)" class="px-3 py-1.5 bg-pitch-950/60 hover:bg-pitch-800 text-pitch-200 text-xs font-semibold rounded-xl border border-pitch-800 transition-all cursor-pointer">10 (2 Teams)</button>
+                        <button onclick="setAttendance(14)" class="px-3 py-1.5 bg-pitch-950/60 hover:bg-pitch-800 text-pitch-200 text-xs font-semibold rounded-xl border border-pitch-800 transition-all cursor-pointer">14</button>
+                        <button onclick="setAttendance(16)" class="px-3 py-1.5 bg-pitch-950/60 hover:bg-pitch-800 text-pitch-200 text-xs font-semibold rounded-xl border border-pitch-800 transition-all cursor-pointer">16 (3 Teams + Subs)</button>
+                        <button onclick="setAttendance(22)" class="px-3 py-1.5 bg-pitch-950/60 hover:bg-pitch-800 text-pitch-200 text-xs font-semibold rounded-xl border border-pitch-800 transition-all cursor-pointer">22</button>
+                    </div>
+
+                    <button 
+                        onclick="initializeMysterySession()"
+                        class="w-full py-4 bg-gradient-to-r from-pitch-500 to-pitch-600 hover:from-pitch-400 hover:to-pitch-500 text-white font-display text-lg font-bold rounded-2xl shadow-lg shadow-pitch-600/40 hover:shadow-pitch-500/60 active:scale-95 transition-all flex items-center justify-center gap-3 border border-pitch-400/40 cursor-pointer"
+                    >
+                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                        <span>Prepare Mystery Cards</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 2: Interactive Reveal Screen (Hidden initially) -->
+        <section id="reveal-section" class="hidden flex-col gap-6">
+            <!-- Top Bar for Reveal Mode -->
+            <div class="bg-pitch-900/90 backdrop-blur-md rounded-2xl p-5 border border-pitch-800 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-pitch-800 border border-pitch-700 flex items-center justify-center text-pitch-400 font-display font-bold text-xl">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-lg text-white">Pass the Device & Pick Your Card</h3>
+                        <p class="text-xs text-pitch-300">Each player taps a mystery card to reveal their squad assignment.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                    <div class="bg-pitch-950/80 px-4 py-2 rounded-xl border border-pitch-800 text-xs font-medium text-pitch-300">
+                        Revealed: <span id="revealed-count" class="font-bold text-pitch-400">0</span> / <span id="total-count-display">0</span>
+                    </div>
+                    <button onclick="resetSetup()" class="px-4 py-2 bg-pitch-800 hover:bg-pitch-700 text-pitch-200 rounded-xl font-semibold text-xs transition-all border border-pitch-700 cursor-pointer">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Restart Setup
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mystery Cards Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="mystery-cards-grid">
+                <!-- Generated cards will appear here -->
+            </div>
+
+            <!-- Admin / Complete Dashboard Trigger (Appears when all or some revealed) -->
+            <div id="dashboard-trigger-container" class="hidden bg-gradient-to-r from-pitch-950 via-pitch-900 to-pitch-950 border border-pitch-500/60 rounded-2xl p-6 text-center flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
+                <div class="text-left">
+                    <h4 class="font-display font-bold text-lg text-white flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-pitch-400"></i> All Mystery Cards Revealed!
+                    </h4>
+                    <p class="text-xs text-pitch-300 mt-0.5">Every player now has their team assignment. Ready to view the complete matchday breakdown?</p>
+                </div>
+                <button onclick="showSummaryDashboard()" class="w-full sm:w-auto px-6 py-3.5 bg-pitch-500 hover:bg-pitch-400 text-pitch-950 font-display font-bold text-sm rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> View Full Squad Dashboard
+                </button>
+            </div>
+        </section>
+
+        <!-- STEP 3: Teams Summary Dashboard (Hidden initially) -->
+        <section id="summary-section" class="hidden flex-col gap-6">
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-pitch-900/80 backdrop-blur-md rounded-2xl p-5 border border-pitch-800 flex items-center justify-between shadow-md">
+                    <div>
+                        <p class="text-xs text-pitch-400 font-semibold uppercase tracking-wider">Total Attendance</p>
+                        <h3 id="sum-stat-total" class="font-display text-3xl font-extrabold text-white mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-pitch-800 flex items-center justify-center text-pitch-400">
+                        <i class="fa-solid fa-user-group text-xl"></i>
+                    </div>
+                </div>
+
+                <div class="bg-pitch-900/80 backdrop-blur-md rounded-2xl p-5 border border-pitch-800 flex items-center justify-between shadow-md">
+                    <div>
+                        <p class="text-xs text-pitch-400 font-semibold uppercase tracking-wider">Active 5-A-Side Teams</p>
+                        <h3 id="sum-stat-teams" class="font-display text-3xl font-extrabold text-white mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-pitch-800 flex items-center justify-center text-pitch-400">
+                        <i class="fa-solid fa-shield-halved text-xl"></i>
+                    </div>
+                </div>
+
+                <div class="bg-pitch-900/80 backdrop-blur-md rounded-2xl p-5 border border-pitch-800 flex items-center justify-between shadow-md">
+                    <div>
+                        <p class="text-xs text-pitch-400 font-semibold uppercase tracking-wider">Rotation / Subs Pool</p>
+                        <h3 id="sum-stat-subs" class="font-display text-3xl font-extrabold text-amber-400 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-950/50 border border-amber-800/50 flex items-center justify-center text-amber-400">
+                        <i class="fa-solid fa-rotate text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rotation Notice Banner -->
+            <div id="sum-subs-banner" class="hidden bg-gradient-to-r from-amber-950/80 via-amber-900/50 to-pitch-900/80 border border-amber-600/40 rounded-2xl p-4 sm:p-5 flex items-start sm:items-center gap-4 text-amber-200">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400">
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-base text-amber-300">Rotation Notice</h4>
+                    <p id="sum-subs-message" class="text-xs sm:text-sm text-amber-200/90 leading-relaxed">Some players are in the substitute pool. After every 10-minute game, subs can pair up or rotate in smoothly!</p>
+                </div>
+            </div>
+
+            <!-- Action Toolbar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-pitch-900/60 p-4 rounded-2xl border border-pitch-800">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-pitch-500 animate-pulse"></span>
+                    <h3 class="font-display font-bold text-lg text-white">Sunday FC Final Rosters</h3>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="backToReveal()" class="px-4 py-2 bg-pitch-800 hover:bg-pitch-700 text-pitch-100 rounded-xl font-semibold text-sm transition-all border border-pitch-700 flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-arrow-left text-xs"></i> Back to Cards
+                    </button>
+                    <button onclick="copyRosters()" class="px-4 py-2 bg-pitch-700 hover:bg-pitch-600 text-white rounded-xl font-semibold text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-copy text-xs"></i> Copy Rosters
+                    </button>
+                    <button onclick="resetSetup()" class="px-4 py-2 bg-red-950/80 hover:bg-red-900 text-red-200 rounded-xl font-semibold text-sm transition-all border border-red-800/60 flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-rotate-left text-xs"></i> New Matchday
+                    </button>
+                </div>
+            </div>
+
+            <!-- Squads Grid Container -->
+            <div id="summary-squads-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically generated summary cards -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-pitch-950/90 border-t border-pitch-800/60 py-6 mt-12 text-center text-xs text-pitch-400">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 Sunday FC • Eradicating paper slips since matchday one.</p>
+            <div class="flex items-center gap-4 text-pitch-300">
+                <span>Rule: Max 5-a-side</span>
+                <span>•</span>
+                <span>10 Min Rotation</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Reveal Modal for Individual Card Tap -->
+    <div id="reveal-modal" class="fixed inset-0 z-50 bg-pitch-950/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-pitch-900 border-2 border-pitch-500/60 rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-pitch-500 to-pitch-700 text-white text-3xl font-display font-black flex items-center justify-center mx-auto shadow-xl mb-4 border border-pitch-400/40" id="modal-team-letter">
+                A
+            </div>
+            <span id="modal-card-number-badge" class="text-xs uppercase tracking-widest bg-pitch-800 text-pitch-300 px-3 py-1 rounded-full border border-pitch-700">Card #1</span>
+            <h3 class="font-display font-bold text-2xl text-white mt-3" id="modal-team-title">Team A (5-a-side)</h3>
+            <p class="text-pitch-300 text-sm mt-2">Congratulations! You have been assigned to this squad.</p>
+
+            <div class="bg-pitch-950/80 rounded-2xl p-4 border border-pitch-800 my-6 flex items-center justify-center gap-3">
+                <i class="fa-solid fa-medal text-pitch-400 text-xl"></i>
+                <div class="text-left">
+                    <p class="text-xs text-pitch-400">Player Designation</p>
+                    <p id="modal-player-role" class="font-display font-bold text-white text-base">Striker #1</p>
+                </div>
+            </div>
+
+            <button onclick="closeRevealModal()" class="w-full py-3.5 bg-pitch-500 hover:bg-pitch-400 text-pitch-950 font-display font-bold text-base rounded-xl shadow-lg transition-all cursor-pointer">
+                Awesome, Pass to Next Player <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-pitch-900 border border-pitch-500/50 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-pitch-500/20 text-pitch-400 flex items-center justify-center">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toast-message" class="text-sm font-medium">Action successful!</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Set today's date formatted nicely
+        document.addEventListener('DOMContentLoaded', () => {
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            const today = new Date().toLocaleDateString('en-US', options);
+            document.getElementById('current-date').textContent = today;
+        });
+
+        function setAttendance(num) {
+            document.getElementById('player-count-input').value = num;
+            initializeMysterySession();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        const footballNicknames = [
+            "Striker", "Playmaker", "Captain", "Engine", "Wall", "Sniper", 
+            "Maestro", "Tank", "Wizard", "Speedy", "Anchor", "General", 
+            "Bouncer", "Finesse", "Dynamo", "Sentinel", "Tactician", "Gladiator",
+            "Beast", "Rocket", "Viper", "Matador", "Panther", "Hawk", "Eagle"
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        let matchSession = {
+            totalPlayers: 0,
+            cards: [],
+            revealedCount: 0
+        };
+
+        function initializeMysterySession() {
+            const inputVal = parseInt(document.getElementById('player-count-input').value);
+            
+            if (isNaN(inputVal) || inputVal < 2) {
+                showToast("Please enter at least 2 players for training.");
+                return;
+            }
+
+            if (inputVal > 60) {
+                showToast("Maximum 60 players supported per session.");
+                return;
+            }
+
+            matchSession.totalPlayers = inputVal;
+            matchSession.revealedCount = 0;
+
+            // 1. Generate assignments for N players
+            // Teams are max 5 per team: Team A, Team B, Team C... remainder as Subs
+            const teamLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+            let assignments = [];
+            
+            let numTeams = Math.ceil(inputVal / 5);
+            // Let's create an array of slots
+            let activeSquadsData = [];
+            let remainingCount = inputVal;
+            let playerGlobalId = 1;
+
+            let teamIdx = 0;
+            let currentPool = [];
+            
+            // Distribute players into teams of max 5
+            for (let t = 0; t < numTeams; t++) {
+                let teamLetter = teamLetters[t];
+                let countForThisTeam = remainingCount >= 5 ? 5 : remainingCount;
+                if (countForThisTeam < 5 && t === numTeams - 1 && remainingCount > 0 && remainingCount < 5) {
+                    // Check if we should make it a Sub squad or distribute. Rule: "remaining persons can pair themselves up"
+                    // If remaining < 5, they form Sub Squad or join. Let's make a Sub Squad if remainder exists and teams already have 5.
+                }
+                remainingCount -= countForThisTeam;
+            }
+
+            // Let's build explicit slots:
+            let squadList = [];
+            let unassignedCount = inputVal;
+            let sIdx = 0;
+            while (unassignedCount >= 5) {
+                squadList.push({ letter: teamLetters[sIdx], title: `Team ${teamLetters[sIdx]}`, isSub: false, count: 5 });
+                unassignedCount -= 5;
+                sIdx++;
+            }
+            if (unassignedCount > 0) {
+                squadList.push({ letter: 'SUB', title: 'Rotation / Sub Squad', isSub: true, count: unassignedCount });
+            }
+
+            // Now flatten into individual card assignments
+            let allCardAssignments = [];
+            squadList.forEach(squad => {
+                for (let i = 1; i <= squad.count; i++) {
+                    let nickname = footballNicknames[(playerGlobalId - 1) % footballNicknames.length];
+                    allCardAssignments.push({
+                        id: playerGlobalId,
+                        teamLetter: squad.letter,
+                        teamTitle: squad.title,
+                        isSub: squad.isSub,
+                        roleName: `${nickname} #${playerGlobalId}`
+                    });
+                    playerGlobalId++;
+                }
+            });
+
+            // Randomize the assignments so cards are completely shuffled
+            allCardAssignments = shuffleArray(allCardAssignments);
+
+            // Assign to matchSession cards (1 to N)
+            matchSession.cards = allCardAssignments.map((assignment, index) => ({
+                cardIndex: index + 1,
+                revealed: false,
+                assignment: assignment
+            }));
+
+            // Render Reveal Grid
+            renderMysteryGrid();
+
+            // Switch views
+            document.getElementById('setup-section').classList.add('hidden');
+            document.getElementById('summary-section').classList.add('hidden');
+            document.getElementById('reveal-section').classList.remove('hidden');
+            document.getElementById('reveal-section').scrollIntoView({ behavior: 'smooth' });
+
+            document.getElementById('total-count-display').textContent = inputVal;
+            document.getElementById('revealed-count').textContent = '0';
+            document.getElementById('dashboard-trigger-container').classList.add('hidden');
+
+            showToast(`Generated ${inputVal} mystery cards! Ready for reveal.`);
+        }
+
+        function renderMysteryGrid() {
+            const grid = document.getElementById('mystery-cards-grid');
+            grid.innerHTML = '';
+
+            matchSession.cards.forEach((cardObj) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = "card-flip h-40 cursor-pointer select-none";
+                cardEl.onclick = () => handleCardClick(cardObj.cardIndex);
+
+                const innerDiv = document.createElement('div');
+                innerDiv.className = `card-inner relative w-full h-full rounded-2xl shadow-xl ${cardObj.revealed ? 'card-flipped' : ''}`;
+                innerDiv.id = `card-inner-${cardObj.cardIndex}`;
+
+                // Front of Card (Mystery State)
+                const frontDiv = document.createElement('div');
+                frontDiv.className = `card-front absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-pitch-800 to-pitch-950 border-2 ${cardObj.revealed ? 'border-pitch-500' : 'border-pitch-700 hover:border-pitch-400'} flex flex-col items-center justify-center p-4 transition-all shadow-md`;
+                frontDiv.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl bg-pitch-700/60 border border-pitch-600/50 flex items-center justify-center text-pitch-200 font-display font-bold text-xl mb-2 shadow-inner">
+                        <i class="fa-solid fa-gift text-pitch-400"></i>
+                    </div>
+                    <span class="font-display font-extrabold text-white text-lg">Card #${cardObj.cardIndex}</span>
+                    <span class="text-[10px] text-pitch-400 uppercase tracking-widest mt-1">Tap to Reveal</span>
+                `;
+
+                // Back of Card (Revealed State)
+                const backDiv = document.createElement('div');
+                backDiv.className = `card-back absolute inset-0 w-full h-full rounded-2xl ${cardObj.assignment.isSub ? 'bg-gradient-to-br from-amber-950 to-pitch-950 border-2 border-amber-500/80' : 'bg-gradient-to-br from-pitch-700 to-pitch-900 border-2 border-pitch-400'} flex flex-col items-center justify-center p-3 text-center shadow-lg`;
+                
+                const letterBadge = cardObj.assignment.teamLetter;
+                backDiv.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl ${cardObj.assignment.isSub ? 'bg-amber-500 text-pitch-950' : 'bg-white text-pitch-950'} font-display font-black text-lg flex items-center justify-center shadow-md mb-1">
+                        ${letterBadge}
+                    </div>
+                    <span class="font-display font-bold text-white text-sm truncate w-full">${cardObj.assignment.teamTitle}</span>
+                    <span class="text-[11px] text-pitch-200 font-medium truncate w-full mt-0.5">${cardObj.assignment.roleName}</span>
+                    <span class="text-[9px] text-pitch-300 uppercase tracking-wider mt-1 bg-black/30 px-2 py-0.5 rounded-full">Claimed</span>
+                `;
+
+                innerDiv.appendChild(frontDiv);
+                innerDiv.appendChild(backDiv);
+                cardEl.appendChild(innerDiv);
+                grid.appendChild(cardEl);
+            });
+        }
+
+        let pendingRevealCard = null;
+
+        function handleCardClick(cardIndex) {
+            const cardObj = matchSession.cards.find(c => c.cardIndex === cardIndex);
+            if (!cardObj) return;
+
+            if (cardObj.revealed) {
+                showToast(`Card #${cardIndex} has already been revealed!`);
+                return;
+            }
+
+            pendingRevealCard = cardObj;
+
+            // Mark revealed in state
+            cardObj.revealed = true;
+            matchSession.revealedCount++;
+            document.getElementById('revealed-count').textContent = matchSession.revealedCount;
+
+            // Flip card visually
+            const innerEl = document.getElementById(`card-inner--${cardIndex}`);
+            if (innerEl) {
+                innerEl.classList.add('card-flipped');
+            }
+
+            // Re-render grid after flip animation or update modal
+            setTimeout(() => {
+                renderMysteryGrid();
+                openRevealModal(cardObj);
+            }, 300);
+
+            // Check if all revealed
+            if (matchSession.revealedCount === matchSession.totalPlayers) {
+                document.getElementById('dashboard-trigger-container').classList.remove('hidden');
+            }
+        }
+
+        function openRevealModal(cardObj) {
+            const modal = document.getElementById('reveal-modal');
+            const letterEl = document.getElementById('modal-team-letter');
+            const numBadge = document.getElementById('modal-card-number-badge');
+            const titleEl = document.getElementById('modal-team-title');
+            const roleEl = document.getElementById('modal-player-role');
+
+            letterEl.textContent = cardObj.assignment.teamLetter;
+            numBadge.textContent = `Mystery Card #${cardObj.cardIndex}`;
+            titleEl.textContent = cardObj.assignment.teamTitle;
+            roleEl.textContent = cardObj.assignment.roleName;
+
+            if (cardObj.assignment.isSub) {
+                letterEl.className = "w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-600 to-amber-800 text-white text-3xl font-display font-black flex items-center justify-center mx-auto shadow-xl mb-4 border border-amber-400/40";
+            } else {
+                letterEl.className = "w-20 h-20 rounded-3xl bg-gradient-to-br from-pitch-500 to-pitch-700 text-white text-3xl font-display font-black flex items-center justify-center mx-auto shadow-xl mb-4 border border-pitch-400/40";
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeRevealModal() {
+            const modal = document.getElementById('reveal-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+
+            if (matchSession.revealedCount === matchSession.totalPlayers) {
+                showToast("All players have picked! You can now view the full dashboard.");
+            } else {
+                showToast("Pass device to the next player!");
+            }
+        }
+
+        function showSummaryDashboard() {
+            // Group cards by team
+            let squadsMap = {};
+            matchSession.cards.forEach(c => {
+                let key = c.assignment.teamLetter;
+                if (!squadsMap[key]) {
+                    squadsMap[key] = {
+                        letter: key,
+                        title: c.assignment.teamTitle,
+                        isSub: c.assignment.isSub,
+                        players: []
+                    };
+                }
+                squadsMap[key].players.push({
+                    cardNumber: c.cardIndex,
+                    roleName: c.assignment.roleName
+                });
+            });
+
+            // Populate summary stats
+            document.getElementById('sum-stat-total').textContent = matchSession.totalPlayers;
+            
+            let activeSquadsList = Object.values(squadsMap).filter(s => !s.isSub);
+            let subSquadObj = Object.values(squadsMap).find(s => s.isSub);
+
+            document.getElementById('sum-stat-teams').textContent = activeSquadsList.length;
+            
+            if (subSquadObj) {
+                document.getElementById('sum-stat-subs').textContent = subSquadObj.players.length;
+                document.getElementById('sum-subs-banner').classList.remove('hidden');
+                document.getElementById('sum-subs-message').textContent = `${subSquadObj.players.length} player(s) are in the Rotation/Sub pool. After every 10-minute game, these players can pair up or rotate in seamlessly!`;
+            } else {
+                document.getElementById('sum-stat-subs').textContent = '0 (Even fit)';
+                document.getElementById('sum-subs-banner').classList.add('hidden');
+            }
+
+            // Render summary cards
+            const container = document.getElementById('summary-squads-container');
+            container.innerHTML = '';
+
+            Object.values(squadsMap).forEach(squad => {
+                const card = document.createElement('div');
+                if (squad.isSub) {
+                    card.className = "bg-gradient-to-br from-amber-950/90 to-pitch-900/90 rounded-3xl p-6 border-2 border-amber-600/50 shadow-xl flex flex-col justify-between relative overflow-hidden";
+                } else {
+                    card.className = "bg-pitch-900/90 backdrop-blur-md rounded-3xl p-6 border border-pitch-700/60 shadow-xl flex flex-col justify-between relative overflow-hidden group hover:border-pitch-500/80 transition-all";
+                }
+
+                let playersHtml = '';
+                squad.players.forEach((p, idx) => {
+                    playersHtml += `
+                        <div class="flex items-center justify-between py-2.5 px-3.5 rounded-xl bg-pitch-950/60 border border-pitch-800/80 hover:border-pitch-600/60 transition-all">
+                            <div class="flex items-center gap-3">
+                                <span class="w-7 h-7 rounded-lg ${squad.isSub ? 'bg-amber-600/20 text-amber-400 border border-amber-500/30' : 'bg-pitch-800 text-pitch-300 border border-pitch-700'} flex items-center justify-center font-display font-bold text-xs">
+                                    #${idx + 1}
+                                </span>
+                                <div>
+                                    <p class="font-semibold text-sm text-white">${p.roleName}</p>
+                                    <p class="text-[11px] text-pitch-400">Card Picked: #${p.cardNumber}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 rounded-full ${squad.isSub ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' : 'bg-pitch-800/80 text-pitch-300 border border-pitch-700/50'} font-medium">
+                                Active
+                            </span>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-pitch-800/80">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl ${squad.isSub ? 'bg-gradient-to-br from-amber-600 to-amber-800 text-white' : 'bg-gradient-to-br from-pitch-500 to-pitch-700 text-white'} flex items-center justify-center font-display font-black text-lg shadow-md">
+                                    ${squad.letter}
+                                </div>
+                                <div>
+                                    <h4 class="font-display font-bold text-lg text-white">${squad.title}</h4>
+                                    <p class="text-xs text-pitch-400">${squad.players.length} Players Assigned</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${squad.isSub ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-pitch-800 text-pitch-200 border border-pitch-700'}">
+                                ${squad.isSub ? 'Rotation' : '5-A-Side'}
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+                            ${playersHtml}
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-pitch-800/60 flex items-center justify-between text-xs text-pitch-400">
+                        <span>Sunday FC Matchday</span>
+                        <span class="font-semibold text-pitch-300"><i class="fa-solid fa-clock text-pitch-500 mr-1"></i> 10 Min Play</span>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Switch views
+            document.getElementById('reveal-section').classList.add('hidden');
+            document.getElementById('summary-section').classList.remove('hidden');
+            document.getElementById('summary-section').scrollIntoView({ behavior: 'smooth' });
+
+            showToast("Loaded full team breakdown dashboard!");
+        }
+
+        function backToReveal() {
+            document.getElementById('summary-section').classList.add('hidden');
+            document.getElementById('reveal-section').classList.remove('hidden');
+            document.getElementById('reveal-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetSetup() {
+            document.getElementById('summary-section').classList.add('hidden');
+            document.getElementById('reveal-section').classList.add('hidden');
+            document.getElementById('setup-section').classList.remove('hidden');
+            document.getElementById('setup-section').scrollIntoView({ behavior: 'smooth' });
+            showToast("Matchday reset. Enter new attendance.");
+        }
+
+        function copyRosters() {
+            let textToCopy = "SUNDAY FC - MYSTERY SQUAD ROSTERS\n===============================\n";
+            textToCopy += `Total Attendance: ${matchSession.totalPlayers} players\nDate: ${new Date().toLocaleDateString()}\n\n`;
+
+            const cards = document.querySelectorAll('#summary-squads-container > div');
+            cards.forEach(card => {
+                const title = card.querySelector('h4').textContent;
+                textToCopy += `[ ${title} ]\n`;
+                const playerRows = card.querySelectorAll('.flex.items-center.justify-between.py-2\\.5');
+                playerRows.forEach(row => {
+                    const name = row.querySelector('p.font-semibold').textContent;
+                    const cardNum = row.querySelector('p.text-\\[11px\\]').textContent;
+                    textToCopy += ` - ${name} (${cardNum})\n`;
+                });
+                textToCopy += `\n`;
+            });
+
+            textToCopy += "Rule: Max 5-a-side teams. 10 minutes play rotation.\n";
+
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("All team rosters copied to clipboard!");
+            } catch (err) {
+                showToast("Failed to copy rosters.");
+            }
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
