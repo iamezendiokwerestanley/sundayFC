@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sunday FC - Tournament Draft Selector</title>
+    <title>Sunday FC - Tournament Draft</title>
     <style>
         :root {
+            --pitch-dark: #0d4a22;
+            --pitch-light: #125c2b;
+            --pitch-line: rgba(255, 255, 255, 0.15);
+            --white: #ffffff;
+            --accent: #38bdf8;
             --primary: #10b981;
             --primary-dark: #059669;
-            --secondary: #1e293b;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --danger: #ef4444;
+            --card-bg: rgba(18, 92, 43, 0.9);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         * {
@@ -25,41 +25,80 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--pitch-dark);
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--white);
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
+        }
+
+        .top-bar {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--pitch-line);
+            padding: 8px 16px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-icon {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text p {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .date-badge {
+            background: var(--card-bg);
+            border: 1px solid var(--pitch-line);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(10px);
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
-            background: var(--secondary);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 16px;
-        }
-
-        header h1 {
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+            max-width: 850px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
         }
 
         .screen {
@@ -70,31 +109,54 @@
             display: block;
         }
 
-        /* Setup / Pots Overview */
+        .section-tag {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        h2.title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 28px;
+        }
+
         .pots-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
         .pot-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 12px;
+            background: rgba(13, 74, 34, 0.7);
+            border: 1px solid var(--pitch-line);
+            border-radius: 12px;
+            padding: 16px;
         }
 
         .pot-card h3 {
             font-size: 1rem;
             color: var(--accent);
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
-        .pot-card span {
-            font-size: 0.75rem;
+        .pot-card h3 span {
+            font-size: 0.7rem;
             background: rgba(56, 189, 248, 0.2);
             color: var(--accent);
             padding: 2px 6px;
@@ -104,109 +166,101 @@
         .pot-card ul {
             list-style: none;
             font-size: 0.85rem;
-            color: var(--text-muted);
-            padding-left: 0;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .pot-card li {
-            padding: 2px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            padding: 3px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.08);
         }
 
         .btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
+            font-weight: bold;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .btn:hover {
             background: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
-        .btn:disabled {
-            background: #475569;
-            cursor: not-allowed;
-        }
-
-        /* Draft Arena */
         .draft-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            background: rgba(13, 74, 34, 0.8);
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin-bottom: 24px;
             border-left: 4px solid var(--accent);
         }
 
         .current-picker-info h2 {
             font-size: 1.2rem;
-            color: var(--primary);
-        }
-
-        .current-picker-info p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            color: #a7f3d0;
+            text-align: left;
         }
 
         .round-badge {
-            background: var(--secondary);
+            background: var(--pitch-light);
             border: 1px solid var(--accent);
             color: var(--accent);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.85rem;
         }
 
         .pots-selection-box {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
+            background: rgba(13, 74, 34, 0.6);
+            border: 1px solid var(--pitch-line);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
         .pots-selection-box h3 {
             font-size: 1rem;
-            margin-bottom: 12px;
-            color: var(--text);
+            margin-bottom: 14px;
+            color: var(--white);
         }
 
         .pot-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
         }
 
         .pot-pick-btn {
-            background: #334155;
+            background: var(--pitch-light);
             color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 14px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: bold;
             transition: all 0.2s;
-            text-align: left;
+            text-align: center;
         }
 
         .pot-pick-btn:hover:not(:disabled) {
             background: var(--accent);
-            color: var(--bg);
+            color: var(--pitch-dark);
             border-color: var(--accent);
         }
 
         .pot-pick-btn:disabled {
-            opacity: 0.4;
+            opacity: 0.3;
             cursor: not-allowed;
             text-decoration: line-through;
         }
@@ -215,62 +269,28 @@
             display: block;
             font-size: 0.75rem;
             opacity: 0.8;
+            margin-top: 4px;
+            font-weight: normal;
         }
 
-        /* Roulette Animation Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: var(--secondary);
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            max-width: 360px;
-            width: 90%;
-            border: 1px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .roulette-box {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin: 20px 0;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-        }
-
-        /* Teams Overview Grid */
         .teams-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .team-card {
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 10px;
-            padding: 14px;
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(13, 74, 34, 0.75);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--pitch-line);
         }
 
         .team-card h4 {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+            color: #a7f3d0;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 6px;
         }
@@ -281,102 +301,153 @@
         }
 
         .team-card li {
-            padding: 4px 0;
-            display: flex;
-            justify-content: space-between;
-            color: var(--text);
+            padding: 5px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
         }
 
-        .team-card li span.role {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            background: rgba(255,255,255,0.05);
-            padding: 2px 6px;
-            border-radius: 4px;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: var(--pitch-light);
+            padding: 36px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            border: 1px solid var(--accent);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        .roulette-box {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(13, 74, 34, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--pitch-line);
+        }
+
+        .nav-hub-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .nav-hub-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Sunday FC Tournament Draft</h1>
-            <p>December 1st &amp; 2nd Week • 4 Teams (5-a-side + 1 Sub)</p>
-        </header>
+    <div class="top-bar">
+        <div class="brand-badge">
+            <div class="brand-icon">⚽</div>
+            <div class="brand-text">
+                <h1>SUNDAY FC</h1>
+                <p>Tournament Draft • Dec 2026</p>
+            </div>
+        </div>
+        <div class="date-badge" id="current-date">Sunday, Dec 2026</div>
+    </div>
 
-        <!-- SCREEN 1: POTS OVERVIEW -->
+    <div class="container">
+
+        <!-- SCREEN 1: POTS & SQUAD OVERVIEW -->
         <div id="screen-pots" class="screen active">
-            <h2 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--text);">Squad &amp; Pot Breakdown</h2>
+            <div class="section-tag">Tournament Setup</div>
+            <h2 class="title">December Cup Draft Pots</h2>
+            <p class="subtitle">Pot 1 Captains will pick players in turns across remaining pots.</p>
+            
             <div class="pots-grid" id="pots-preview"></div>
             <button class="btn" onclick="startDraft()">Start Captains' Draft</button>
+            <a href="index.html" class="nav-hub-link">&larr; Back to App Hub</a>
         </div>
 
         <!-- SCREEN 2: DRAFT ROOM -->
         <div id="screen-draft" class="screen">
             <div class="draft-header">
                 <div class="current-picker-info">
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">ON THE CLOCK</span>
+                    <span style="font-size: 0.7rem; color: rgba(255,255,255,0.7); text-transform: uppercase;">On The Clock</span>
                     <h2 id="picker-name">Captain Name</h2>
-                    <p id="picker-team">Team 1</p>
+                    <p id="picker-team" style="font-size: 0.85rem; color: #a7f3d0;">Team 1</p>
                 </div>
                 <div class="round-badge" id="round-indicator">Round 1</div>
             </div>
 
             <div class="pots-selection-box">
                 <h3>Select a Pot to Draft From:</h3>
-                <div class="pot-buttons" id="pot-buttons-container">
-                    <!-- Populated dynamically -->
-                </div>
+                <div class="pot-buttons" id="pot-buttons-container"></div>
             </div>
 
-            <h3 style="font-size: 1rem; margin-bottom: 10px;">Live Rosters</h3>
-            <div class="teams-container" id="live-teams-container">
-                <!-- Populated dynamically -->
-            </div>
+            <div class="section-tag" style="text-align: left; margin-bottom: 8px;">Live Rosters</div>
+            <div class="teams-container" id="live-teams-container"></div>
         </div>
 
         <!-- SCREEN 3: FINAL ROSTERS -->
         <div id="screen-result" class="screen">
-            <h2 style="text-align: center; color: var(--primary); margin-bottom: 16px;">Tournament Teams Locked! 🎉</h2>
+            <div class="section-tag">Draft Complete</div>
+            <h2 class="title" style="color: #a7f3d0;">Tournament Squads Locked! 🏆</h2>
+            <p class="subtitle">Ready for the December 1st &amp; 2nd Sunday fixtures.</p>
+            
             <div class="teams-container" id="final-teams-container"></div>
             <button class="btn" onclick="resetDraft()">Reset &amp; Redraft</button>
+            <a href="index.html" class="nav-hub-link">&larr; Return to App Hub</a>
         </div>
+
     </div>
 
     <!-- ROULETTE ANIMATION MODAL -->
     <div class="modal" id="roulette-modal">
         <div class="modal-content">
-            <h3 id="modal-title" style="color: var(--accent);">Selecting Player...</h3>
+            <h3 id="modal-title" style="color: var(--accent); font-size: 1.1rem;">Drawing Player...</h3>
             <div class="roulette-box" id="roulette-display">...</div>
-            <p id="modal-subtext" style="font-size: 0.85rem; color: var(--text-muted);">Spinning the pot...</p>
+            <p id="modal-subtext" style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Spinning the pot...</p>
         </div>
     </div>
 
     <script>
-        // Data Structure
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+
         const pots = {
-            1: { name: "Pot 1 (Goalkeepers / Captains)", role: "GK / Captain", players: ["Chekwube", "Mr Val", "Obinmna", "Olago"] },
-            2: { name: "Pot 2 (Strikers)", role: "Striker", players: ["Ebuka", "Osy", "Ifeanyi", "Chidi"] },
-            3: { name: "Pot 3 (Defenders)", role: "Defender", players: ["Nweke", "Sammy", "Ibro", "Otigba"] },
-            4: { name: "Pot 4 (Midfielders)", role: "Midfielder", players: ["Ekene", "Psalmz", "Vincent", "Chigbo"] },
-            5: { name: "Pot 5 (Attackers)", role: "Attacker", players: ["Smart", "Stan", "Kodiri", "Emeka"] },
-            6: { name: "Pot 6 (Impact Subs)", role: "Substitute", players: ["CJ", "Emmy", "Chibuike", "Somto"] }
+            1: { name: "Pot 1", players: ["Chekwube", "Mr Val", "Obinna", "Olago"] },
+            2: { name: "Pot 2", players: ["Ebuka", "Osy", "Ifeanyi", "Chidi"] },
+            3: { name: "Pot 3", players: ["Nweke", "Sammy", "Ibro", "Otigba"] },
+            4: { name: "Pot 4", players: ["Ekene", "Psalmz", "Vincent", "Chigbo"] },
+            5: { name: "Pot 5", players: ["Smart", "Stan", "Kodiri", "Emeka"] },
+            6: { name: "Pot 6", players: ["CJ", "Emmy", "Chibuike", "Somto"] }
         };
 
         let teams = [];
         let currentCaptainIndex = 0;
-        let currentRound = 1; // Round 1: Pot 2, Round 2: Pot 3, Round 3: Pot 4, Round 4: Pot 5, Round 5: Pot 6
+        let currentRound = 1;
         let availablePots = [2, 3, 4, 5, 6];
 
-        // Initialize display on load
         function initPotsPreview() {
             const container = document.getElementById('pots-preview');
             container.innerHTML = '';
             for (let p in pots) {
                 container.innerHTML += `
                     <div class="pot-card">
-                        <h3>${pots[p].name.split(' ')[0]} ${pots[p].name.split(' ')[1]} <span>${pots[p].players.length} players</span></h3>
-                        <p style="font-size:0.75rem; color:var(--accent); margin-bottom:6px;">${pots[p].role}</p>
+                        <h3>${pots[p].name} <span>${pots[p].players.length} players</span></h3>
                         <ul>
                             ${pots[p].players.map(pl => `<li>${pl}</li>`).join('')}
                         </ul>
@@ -387,12 +458,11 @@
         initPotsPreview();
 
         function startDraft() {
-            // Initialize 4 teams with Pot 1 captains
-            teams = pots[1].players.map((gk, index) => ({
+            teams = pots[1].players.map((captain, index) => ({
                 id: index + 1,
-                name: `Team ${index + 1} (${gk})`,
-                captain: gk,
-                roster: [{ name: gk, role: 'GK / Captain' }]
+                name: `Team ${index + 1} (${captain})`,
+                captain: captain,
+                roster: [captain]
             }));
 
             currentCaptainIndex = 0;
@@ -406,7 +476,6 @@
 
         function updateDraftUI() {
             if (currentRound > 5) {
-                // Draft finished!
                 document.getElementById('screen-draft').classList.remove('active');
                 document.getElementById('screen-result').classList.add('active');
                 renderFinalTeams();
@@ -415,10 +484,9 @@
 
             const currentTeam = teams[currentCaptainIndex];
             document.getElementById('picker-name').innerText = currentTeam.captain;
-            document.getElementById('picker-team').innerText = currentTeam.name;
+            document.getElementById('picker-team').innerText = `${currentTeam.name} is picking`;
             document.getElementById('round-indicator').innerText = `Round ${currentRound} / 5`;
 
-            // Render Pot selection buttons
             const potButtonsContainer = document.getElementById('pot-buttons-container');
             potButtonsContainer.innerHTML = '';
             
@@ -427,8 +495,8 @@
                 const isAvailable = potData.players.length > 0;
                 potButtonsContainer.innerHTML += `
                     <button class="pot-pick-btn" ${!isAvailable ? 'disabled' : ''} onclick="pickFromPot(${potNum})">
-                        <strong>${potData.name.split('(')[0]}</strong>
-                        <span>${potData.role} (${potData.players.length} left)</span>
+                        <strong>${potData.name}</strong>
+                        <span>${potData.players.length} available</span>
                     </button>
                 `;
             });
@@ -440,7 +508,6 @@
             const potData = pots[potNum];
             if (potData.players.length === 0) return;
 
-            // Show roulette animation modal
             const modal = document.getElementById('roulette-modal');
             const display = document.getElementById('roulette-display');
             const subtext = document.getElementById('modal-subtext');
@@ -454,7 +521,6 @@
                 counter++;
                 if (counter > 12) {
                     clearInterval(interval);
-                    // Final pick
                     const randomIndex = Math.floor(Math.random() * candidates.length);
                     const chosenPlayer = candidates.splice(randomIndex, 1)[0];
                     
@@ -464,13 +530,8 @@
                     setTimeout(() => {
                         modal.style.display = 'none';
                         
-                        // Add player to team roster
-                        teams[currentCaptainIndex].roster.push({
-                            name: chosenPlayer,
-                            role: pots[potNum].role
-                        });
+                        teams[currentCaptainIndex].roster.push(chosenPlayer);
 
-                        // Advance turn
                         currentCaptainIndex++;
                         if (currentCaptainIndex >= teams.length) {
                             currentCaptainIndex = 0;
@@ -490,7 +551,7 @@
                     <div class="team-card">
                         <h4>${t.name}</h4>
                         <ul>
-                            ${t.roster.map(p => `<li>${p.name} <span class="role">${p.role}</span></li>`).join('')}
+                            ${t.roster.map(p => `<li>${p}</li>`).join('')}
                         </ul>
                     </div>
                 `;
@@ -505,7 +566,7 @@
                     <div class="team-card">
                         <h4>${t.name}</h4>
                         <ul>
-                            ${t.roster.map(p => `<li>${p.name} <span class="role">${p.role}</span></li>`).join('')}
+                            ${t.roster.map(p => `<li>${p}</li>`).join('')}
                         </ul>
                     </div>
                 `;
@@ -513,8 +574,7 @@
         }
 
         function resetDraft() {
-            // Restore players to pots
-            pots[1].players = ["Chekwube", "Mr Val", "Obinmna", "Olago"];
+            pots[1].players = ["Chekwube", "Mr Val", "Obinna", "Olago"];
             pots[2].players = ["Ebuka", "Osy", "Ifeanyi", "Chidi"];
             pots[3].players = ["Nweke", "Sammy", "Ibro", "Otigba"];
             pots[4].players = ["Ekene", "Psalmz", "Vincent", "Chigbo"];
