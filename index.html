@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunday FC - App Hub</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #1e293b;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--secondary);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 32px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .nav-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .nav-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .nav-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .nav-info {
+            text-align: left;
+        }
+
+        .nav-info h3 {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .nav-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .nav-arrow {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 32px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>⚽ Sunday FC Hub</h1>
+            <p>Select an application below to get started</p>
+        </header>
+
+        <div class="nav-grid">
+            <!-- Weekly Training Randomizer -->
+            <a href="weekly.html" class="nav-card">
+                <div class="nav-info">
+                    <h3>Weekly Training Randomizer</h3>
+                    <p>Dynamic 5-man team squad sorting &amp; interactive mystery reveal.</p>
+                </div>
+                <div class="nav-arrow">&rarr;</div>
+            </a>
+
+            <!-- Tournament Draft Selector -->
+            <a href="tournament.html" class="nav-card">
+                <div class="nav-info">
+                    <h3>Tournament Draft Selector</h3>
+                    <p>Captain-led draft across Pots 1 to 6 for the December tournament.</p>
+                </div>
+                <div class="nav-arrow">&rarr;</div>
+            </a>
+        </div>
+
+        <footer>
+            Sunday FC Management Suite &copy; 2026
+        </footer>
+    </div>
+
+</body>
+</html>
