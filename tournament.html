@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sunday FC - Tournament Draft</title>
+    <title>Sunday FC - Tournament Draft (Cloud)</title>
     <style>
         :root {
             --pitch-dark: #0d4a22;
@@ -15,20 +15,14 @@
             --primary-dark: #059669;
             --card-bg: rgba(18, 92, 43, 0.9);
             --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            --danger: #ef4444;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
         body {
             background-color: var(--pitch-dark);
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 40px 40px;
             color: var(--white);
             min-height: 100vh;
@@ -38,322 +32,63 @@
             padding: 20px;
         }
 
-        .top-bar {
-            width: 100%;
-            max-width: 900px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .brand-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--card-bg);
-            border: 1px solid var(--pitch-line);
-            padding: 8px 16px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .brand-icon {
-            background: var(--primary);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        .brand-text h1 {
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-        }
-
-        .brand-text p {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .date-badge {
-            background: var(--card-bg);
-            border: 1px solid var(--pitch-line);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            backdrop-filter: blur(10px);
-        }
+        .top-bar { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .brand-badge { display: flex; align-items: center; gap: 12px; background: var(--card-bg); border: 1px solid var(--pitch-line); padding: 8px 16px; border-radius: 30px; }
+        .brand-icon { background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .brand-text h1 { font-size: 1rem; }
+        .brand-text p { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+        .date-badge { background: var(--card-bg); border: 1px solid var(--pitch-line); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; }
 
         .container {
-            width: 100%;
-            max-width: 850px;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 24px;
-            padding: 36px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
+            width: 100%; max-width: 850px; background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 36px;
+            box-shadow: var(--shadow); backdrop-filter: blur(12px);
         }
 
-        .screen {
-            display: none;
-        }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .section-tag { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1.5px; color: var(--accent); font-weight: bold; margin-bottom: 12px; text-align: center; }
+        h2.title { font-size: 1.8rem; text-align: center; margin-bottom: 8px; }
+        p.subtitle { text-align: center; font-size: 0.95rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 28px; }
 
-        .screen.active {
-            display: block;
-        }
-
-        .section-tag {
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1.5px;
-            color: var(--accent);
-            font-weight: bold;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        h2.title {
-            font-size: 1.8rem;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        p.subtitle {
-            text-align: center;
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 28px;
-        }
-
-        .pots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 14px;
-            margin-bottom: 28px;
-        }
-
-        .pot-card {
-            background: rgba(13, 74, 34, 0.7);
-            border: 1px solid var(--pitch-line);
-            border-radius: 12px;
-            padding: 16px;
-        }
-
-        .pot-card h3 {
-            font-size: 1rem;
-            color: var(--accent);
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pot-card h3 span {
-            font-size: 0.7rem;
-            background: rgba(56, 189, 248, 0.2);
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .pot-card ul {
-            list-style: none;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .pot-card li {
-            padding: 3px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.08);
-        }
+        .pots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 28px; }
+        .pot-card { background: rgba(13, 74, 34, 0.7); border: 1px solid var(--pitch-line); border-radius: 12px; padding: 16px; }
+        .pot-card h3 { font-size: 1rem; color: var(--accent); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .pot-card h3 span { font-size: 0.7rem; background: rgba(56, 189, 248, 0.2); color: var(--accent); padding: 2px 6px; border-radius: 4px; }
+        .pot-card ul { list-style: none; font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); }
+        .pot-card li { padding: 3px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); }
 
         .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            background: var(--primary); color: white; border: none; padding: 14px 28px;
+            font-size: 1rem; font-weight: bold; border-radius: 12px; cursor: pointer; width: 100%;
+            transition: all 0.2s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); margin-top: 10px;
         }
+        .btn:hover { background: var(--primary-dark); }
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
 
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
+        .draft-header { display: flex; justify-content: space-between; align-items: center; background: rgba(13, 74, 34, 0.8); padding: 16px 20px; border-radius: 14px; margin-bottom: 24px; border-left: 4px solid var(--accent); }
+        .current-picker-info h2 { font-size: 1.2rem; color: #a7f3d0; text-align: left; }
+        .round-badge { background: var(--pitch-light); border: 1px solid var(--accent); color: var(--accent); padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; }
 
-        .draft-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(13, 74, 34, 0.8);
-            padding: 16px 20px;
-            border-radius: 14px;
-            margin-bottom: 24px;
-            border-left: 4px solid var(--accent);
-        }
+        .pots-selection-box { background: rgba(13, 74, 34, 0.6); border: 1px solid var(--pitch-line); border-radius: 14px; padding: 20px; margin-bottom: 24px; }
+        .pot-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+        .pot-pick-btn { background: var(--pitch-light); color: white; border: 1px solid rgba(255,255,255,0.15); padding: 14px; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: bold; text-align: center; }
+        .pot-pick-btn:hover:not(:disabled) { background: var(--accent); color: var(--pitch-dark); }
+        .pot-pick-btn:disabled { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+        .pot-pick-btn span { display: block; font-size: 0.75rem; opacity: 0.8; margin-top: 4px; font-weight: normal; }
 
-        .current-picker-info h2 {
-            font-size: 1.2rem;
-            color: #a7f3d0;
-            text-align: left;
-        }
+        .teams-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .team-card { background: rgba(13, 74, 34, 0.75); border-radius: 12px; padding: 16px; border: 1px solid var(--pitch-line); }
+        .team-card h4 { color: #a7f3d0; font-size: 1.05rem; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; }
+        .team-card ul { list-style: none; font-size: 0.9rem; }
+        .team-card li { padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); }
 
-        .round-badge {
-            background: var(--pitch-light);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(8px); }
+        .modal-content { background: var(--pitch-light); padding: 36px; border-radius: 20px; text-align: center; max-width: 380px; width: 90%; border: 1px solid var(--accent); }
+        .roulette-box { font-size: 2rem; font-weight: bold; color: var(--accent); margin: 20px 0; min-height: 60px; display: flex; align-items: center; justify-content: center; background: rgba(13, 74, 34, 0.8); border-radius: 12px; }
 
-        .pots-selection-box {
-            background: rgba(13, 74, 34, 0.6);
-            border: 1px solid var(--pitch-line);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .pots-selection-box h3 {
-            font-size: 1rem;
-            margin-bottom: 14px;
-            color: var(--white);
-        }
-
-        .pot-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-        }
-
-        .pot-pick-btn {
-            background: var(--pitch-light);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: bold;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .pot-pick-btn:hover:not(:disabled) {
-            background: var(--accent);
-            color: var(--pitch-dark);
-            border-color: var(--accent);
-        }
-
-        .pot-pick-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
-
-        .pot-pick-btn span {
-            display: block;
-            font-size: 0.75rem;
-            opacity: 0.8;
-            margin-top: 4px;
-            font-weight: normal;
-        }
-
-        .teams-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .team-card {
-            background: rgba(13, 74, 34, 0.75);
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid var(--pitch-line);
-        }
-
-        .team-card h4 {
-            color: #a7f3d0;
-            font-size: 1.05rem;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 6px;
-        }
-
-        .team-card ul {
-            list-style: none;
-            font-size: 0.9rem;
-        }
-
-        .team-card li {
-            padding: 5px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.05);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-        }
-
-        .modal-content {
-            background: var(--pitch-light);
-            padding: 36px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 380px;
-            width: 90%;
-            border: 1px solid var(--accent);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-        }
-
-        .roulette-box {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin: 20px 0;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(13, 74, 34, 0.8);
-            border-radius: 12px;
-            border: 1px solid var(--pitch-line);
-        }
-
-        .nav-hub-link {
-            display: block;
-            text-align: center;
-            margin-top: 16px;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-
-        .nav-hub-link:hover {
-            color: var(--accent);
-            text-decoration: underline;
-        }
+        .nav-hub-link { display: block; text-align: center; margin-top: 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; }
+        .nav-hub-link:hover { color: var(--accent); text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -361,24 +96,21 @@
     <div class="top-bar">
         <div class="brand-badge">
             <div class="brand-icon">⚽</div>
-            <div class="brand-text">
-                <h1>SUNDAY FC</h1>
-                <p>Tournament Draft • Dec 2026</p>
-            </div>
+            <div class="brand-text"><h1>SUNDAY FC</h1><p>Tournament Draft • Cloud Sync</p></div>
         </div>
-        <div class="date-badge" id="current-date">Sunday, Dec 2026</div>
+        <div class="date-badge" id="current-date">Dec 2026</div>
     </div>
 
     <div class="container">
-
-        <!-- SCREEN 1: POTS & SQUAD OVERVIEW -->
+        <!-- SCREEN 1: SETUP -->
         <div id="screen-pots" class="screen active">
             <div class="section-tag">Tournament Setup</div>
             <h2 class="title">December Cup Draft Pots</h2>
-            <p class="subtitle">Pot 1 Captains will pick players in turns across remaining pots.</p>
+            <p class="subtitle">Cloud synchronized. All team members view the same live draft state.</p>
             
             <div class="pots-grid" id="pots-preview"></div>
-            <button class="btn" onclick="startDraft()">Start Captains' Draft</button>
+            <button class="btn" id="start-draft-btn" onclick="startDraft()" style="display:none;">Start Captains' Draft</button>
+            <button class="btn btn-danger" id="resume-btn" style="display:none;" onclick="showCloudResults()">View Cloud Draft Squads</button>
             <a href="index.html" class="nav-hub-link">&larr; Back to App Hub</a>
         </div>
 
@@ -386,9 +118,9 @@
         <div id="screen-draft" class="screen">
             <div class="draft-header">
                 <div class="current-picker-info">
-                    <span style="font-size: 0.7rem; color: rgba(255,255,255,0.7); text-transform: uppercase;">On The Clock</span>
-                    <h2 id="picker-name">Captain Name</h2>
-                    <p id="picker-team" style="font-size: 0.85rem; color: #a7f3d0;">Team 1</p>
+                    <span style="font-size: 0.7rem; color: rgba(255,255,255,0.7);">ON THE CLOCK</span>
+                    <h2 id="picker-name">Captain</h2>
+                    <p id="picker-team" style="font-size: 0.85rem; color: #a7f3d0;">Team A</p>
                 </div>
                 <div class="round-badge" id="round-indicator">Round 1</div>
             </div>
@@ -402,33 +134,49 @@
             <div class="teams-container" id="live-teams-container"></div>
         </div>
 
-        <!-- SCREEN 3: FINAL ROSTERS -->
+        <!-- SCREEN 3: RESULTS -->
         <div id="screen-result" class="screen">
             <div class="section-tag">Draft Complete</div>
-            <h2 class="title" style="color: #a7f3d0;">Tournament Squads Locked! 🏆</h2>
-            <p class="subtitle">Ready for the December 1st &amp; 2nd Sunday fixtures.</p>
+            <h2 class="title" style="color: #a7f3d0;">Tournament Squads Live in Cloud! 🏆</h2>
+            <p class="subtitle">Synced globally across all user devices.</p>
             
             <div class="teams-container" id="final-teams-container"></div>
-            <button class="btn" onclick="resetDraft()">Reset &amp; Redraft</button>
+            <button class="btn btn-danger" onclick="resetCloudDraft()">Reset Cloud Draft</button>
             <a href="index.html" class="nav-hub-link">&larr; Return to App Hub</a>
         </div>
-
     </div>
 
-    <!-- ROULETTE ANIMATION MODAL -->
+    <!-- MODAL -->
     <div class="modal" id="roulette-modal">
         <div class="modal-content">
             <h3 id="modal-title" style="color: var(--accent); font-size: 1.1rem;">Drawing Player...</h3>
             <div class="roulette-box" id="roulette-display">...</div>
-            <p id="modal-subtext" style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Spinning the pot...</p>
+            <p id="modal-subtext" style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Spinning pot...</p>
         </div>
     </div>
 
-    <script>
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    <!-- Firebase SDK & App Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const pots = {
-            1: { name: "Pot 1", players: ["Chekwube", "Mr Val", "Obinna", "Olago"] },
+        // TODO: Replace with your actual Firebase project config from Firebase Console
+        const firebaseConfig = {
+              apiKey: "AIzaSyBMUboQAaQi0h8lmUZ6lzEX-z497BkEuSM",
+              authDomain: "sunday-fc-db.firebaseapp.com",
+              projectId: "sunday-fc-db",
+              storageBucket: "sunday-fc-db.firebasestorage.app",
+              messagingSenderId: "1066010274565",
+              appId: "1:1066010274565:web:f67570fc191d58d82b656c",
+              measurementId: "G-2TX4ZWK1XL"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const defaultPots = {
+            1: { name: "Pot 1", players: ["Chekwube", "Mr Val", "Obinmna", "Olago"] },
             2: { name: "Pot 2", players: ["Ebuka", "Osy", "Ifeanyi", "Chidi"] },
             3: { name: "Pot 3", players: ["Nweke", "Sammy", "Ibro", "Otigba"] },
             4: { name: "Pot 4", players: ["Ekene", "Psalmz", "Vincent", "Chigbo"] },
@@ -436,31 +184,48 @@
             6: { name: "Pot 6", players: ["CJ", "Emmy", "Chibuike", "Somto"] }
         };
 
+        const teamNames = ['Team A', 'Team B', 'Team C', 'Team D'];
+        let pots = JSON.parse(JSON.stringify(defaultPots));
         let teams = [];
         let currentCaptainIndex = 0;
         let currentRound = 1;
         let availablePots = [2, 3, 4, 5, 6];
 
-        function initPotsPreview() {
+        async function checkCloudState() {
+            try {
+                const docRef = doc(db, "sunday_fc", "tournament_state");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().teams) {
+                    document.getElementById('resume-btn').style.display = 'block';
+                } else {
+                    document.getElementById('start-draft-btn').style.display = 'block';
+                }
+            } catch (e) {
+                console.error("Cloud check error:", e);
+                document.getElementById('start-draft-btn').style.display = 'block';
+            }
+        }
+        checkCloudState();
+
+        window.initPotsPreview = function() {
             const container = document.getElementById('pots-preview');
             container.innerHTML = '';
             for (let p in pots) {
                 container.innerHTML += `
                     <div class="pot-card">
                         <h3>${pots[p].name} <span>${pots[p].players.length} players</span></h3>
-                        <ul>
-                            ${pots[p].players.map(pl => `<li>${pl}</li>`).join('')}
-                        </ul>
+                        <ul>${pots[p].players.map(pl => `<li>${pl}</li>`).join('')}</ul>
                     </div>
                 `;
             }
         }
         initPotsPreview();
 
-        function startDraft() {
+        window.startDraft = function() {
+            pots = JSON.parse(JSON.stringify(defaultPots));
             teams = pots[1].players.map((captain, index) => ({
                 id: index + 1,
-                name: `Team ${index + 1} (${captain})`,
+                name: `${teamNames[index]} (${captain})`,
                 captain: captain,
                 roster: [captain]
             }));
@@ -474,8 +239,20 @@
             updateDraftUI();
         }
 
+        window.showCloudResults = async function() {
+            const docRef = doc(db, "sunday_fc", "tournament_state");
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                teams = docSnap.data().teams;
+                document.getElementById('screen-pots').classList.remove('active');
+                document.getElementById('screen-result').classList.add('active');
+                renderFinalTeams();
+            }
+        }
+
         function updateDraftUI() {
             if (currentRound > 5) {
+                saveStateToCloud();
                 document.getElementById('screen-draft').classList.remove('active');
                 document.getElementById('screen-result').classList.add('active');
                 renderFinalTeams();
@@ -504,7 +281,7 @@
             renderLiveTeams();
         }
 
-        function pickFromPot(potNum) {
+        window.pickFromPot = function(potNum) {
             const potData = pots[potNum];
             if (potData.players.length === 0) return;
 
@@ -529,7 +306,6 @@
 
                     setTimeout(() => {
                         modal.style.display = 'none';
-                        
                         teams[currentCaptainIndex].roster.push(chosenPlayer);
 
                         currentCaptainIndex++;
@@ -550,9 +326,7 @@
                 container.innerHTML += `
                     <div class="team-card">
                         <h4>${t.name}</h4>
-                        <ul>
-                            ${t.roster.map(p => `<li>${p}</li>`).join('')}
-                        </ul>
+                        <ul>${t.roster.map(p => `<li>${p}</li>`).join('')}</ul>
                     </div>
                 `;
             });
@@ -565,25 +339,27 @@
                 container.innerHTML += `
                     <div class="team-card">
                         <h4>${t.name}</h4>
-                        <ul>
-                            ${t.roster.map(p => `<li>${p}</li>`).join('')}
-                        </ul>
+                        <ul>${t.roster.map(p => `<li>${p}</li>`).join('')}</ul>
                     </div>
                 `;
             });
         }
 
-        function resetDraft() {
-            pots[1].players = ["Chekwube", "Mr Val", "Obinna", "Olago"];
-            pots[2].players = ["Ebuka", "Osy", "Ifeanyi", "Chidi"];
-            pots[3].players = ["Nweke", "Sammy", "Ibro", "Otigba"];
-            pots[4].players = ["Ekene", "Psalmz", "Vincent", "Chigbo"];
-            pots[5].players = ["Smart", "Stan", "Kodiri", "Emeka"];
-            pots[6].players = ["CJ", "Emmy", "Chibuike", "Somto"];
+        async function saveStateToCloud() {
+            try {
+                await setDoc(doc(db, "sunday_fc", "tournament_state"), { teams: teams });
+            } catch (e) {
+                console.error("Error saving to cloud:", e);
+            }
+        }
 
-            document.getElementById('screen-result').classList.remove('active');
-            document.getElementById('screen-pots').classList.add('active');
-            initPotsPreview();
+        window.resetCloudDraft = async function() {
+            try {
+                await deleteDoc(doc(db, "sunday_fc", "tournament_state"));
+                location.reload();
+            } catch (e) {
+                console.error("Error resetting cloud state:", e);
+            }
         }
     </script>
 </body>
