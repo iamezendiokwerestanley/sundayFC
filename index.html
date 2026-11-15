@@ -6,14 +6,15 @@
     <title>Sunday FC - App Hub</title>
     <style>
         :root {
+            --pitch-dark: #0d4a22;
+            --pitch-light: #125c2b;
+            --pitch-line: rgba(255, 255, 255, 0.15);
+            --white: #ffffff;
+            --accent: #38bdf8;
             --primary: #10b981;
             --primary-dark: #059669;
-            --secondary: #1e293b;
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
+            --card-bg: rgba(18, 92, 43, 0.9);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         * {
@@ -24,8 +25,12 @@
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--pitch-dark);
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--white);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -37,42 +42,28 @@
         .container {
             width: 100%;
             max-width: 600px;
-            background: var(--secondary);
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.2);
             text-align: center;
+            backdrop-filter: blur(12px);
         }
 
-        header {
-            margin-bottom: 32px;
-        }
+        header { margin-bottom: 28px; }
+        header h1 { font-size: 2.2rem; color: #a7f3d0; margin-bottom: 8px; }
+        header p { color: rgba(255,255,255,0.8); font-size: 0.95rem; }
 
-        header h1 {
-            font-size: 2.2rem;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        .nav-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .nav-grid { display: flex; flex-direction: column; gap: 14px; }
 
         .nav-card {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(13, 74, 34, 0.8);
+            border: 1px solid var(--pitch-line);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px 20px;
             text-decoration: none;
-            color: var(--text);
+            color: var(--white);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -80,37 +71,17 @@
         }
 
         .nav-card:hover {
-            border-color: var(--primary);
+            border-color: var(--accent);
             transform: translateY(-2px);
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(13, 74, 34, 1);
         }
 
-        .nav-info {
-            text-align: left;
-        }
+        .nav-info { text-align: left; }
+        .nav-info h3 { font-size: 1.1rem; color: var(--accent); margin-bottom: 4px; }
+        .nav-info p { font-size: 0.82rem; color: rgba(255,255,255,0.7); }
+        .nav-arrow { font-size: 1.4rem; color: var(--primary); font-weight: bold; }
 
-        .nav-info h3 {
-            font-size: 1.2rem;
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
-
-        .nav-info p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .nav-arrow {
-            font-size: 1.5rem;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        footer {
-            margin-top: 32px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+        footer { margin-top: 28px; font-size: 0.8rem; color: rgba(255,255,255,0.6); }
     </style>
 </head>
 <body>
@@ -118,7 +89,7 @@
     <div class="container">
         <header>
             <h1>⚽ Sunday FC Hub</h1>
-            <p>Select an application below to get started</p>
+            <p>Select an application below</p>
         </header>
 
         <div class="nav-grid">
@@ -126,7 +97,7 @@
             <a href="weekly.html" class="nav-card">
                 <div class="nav-info">
                     <h3>Weekly Training Randomizer</h3>
-                    <p>Dynamic 5-man team squad sorting &amp; interactive mystery reveal.</p>
+                    <p>Dynamic sequential squad sorting (Teams A, B, C...) &amp; mystery reveal.</p>
                 </div>
                 <div class="nav-arrow">&rarr;</div>
             </a>
@@ -139,11 +110,18 @@
                 </div>
                 <div class="nav-arrow">&rarr;</div>
             </a>
+
+            <!-- Tournament Matchday Schedule -->
+            <a href="schedule.html" class="nav-card">
+                <div class="nav-info">
+                    <h3>Tournament Matchday Schedule</h3>
+                    <p>Fixture visualizer, 30-min halves, &amp; automated 3rd place/final brackets.</p>
+                </div>
+                <div class="nav-arrow">&rarr;</div>
+            </a>
         </div>
 
-        <footer>
-            Sunday FC Management Suite &copy; 2026
-        </footer>
+        <footer>Sunday FC Management Suite &copy; 2026</footer>
     </div>
 
 </body>
